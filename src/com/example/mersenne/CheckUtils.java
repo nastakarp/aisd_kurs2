@@ -3,8 +3,6 @@ package com.example.mersenne;
 import java.math.BigInteger;
 
 public class CheckUtils {
-
-    // Проверка на простоту
     public static boolean isPrime(int number) {
         if (number <= 1) {
             return false;
@@ -24,7 +22,6 @@ public class CheckUtils {
         return true;
     }
 
-    // Тест Люка-Лемера
     public static boolean lucasLehmerTest(int p) {
         if (p == 2) {
             return true;

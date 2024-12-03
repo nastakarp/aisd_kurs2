@@ -3,6 +3,7 @@ package com.example.mersenne;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 public class SingleThreadMersenne {
@@ -11,23 +12,22 @@ public class SingleThreadMersenne {
         long programStartTime = System.nanoTime(); // Старт времени программы
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath))) {
             IntStream.iterate(3, p -> p < max, p -> p + 2)
+                    .filter(CheckUtils::isPrime)
                     .forEach(p -> {
                         long startTime = System.nanoTime();
-                        boolean isMersenne = false;
-                        if (CheckUtils.isPrime(p)) {
-                            isMersenne = CheckUtils.lucasLehmerTest(p);
-                        }
+                        boolean isMersenne = CheckUtils.lucasLehmerTest(p);
                         long endTime = System.nanoTime();
-                        long elapsedTime = (endTime - startTime) / 1_000_000; // Время обработки текущего числа в мс
-                        long secondsSinceStart = (endTime - programStartTime) / 1_000_000_000; // Прошедшее время в секундах
+
+                        long elapsedTime = TimeUnit.NANOSECONDS.toMillis(endTime - startTime); // Время вычисления текущего числа
+                        long millisSinceStart = TimeUnit.NANOSECONDS.toMillis(endTime - programStartTime); // Прошедшее время с начала программы в миллисекундах
+
                         try {
-                            writer.write(p +" "+ secondsSinceStart +"\n");
+                            writer.write(p + " " + millisSinceStart + "\n");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        if (isMersenne) {
-                            System.out.println("Найдено: M_" + p + " (на секунде " + secondsSinceStart + ")");
-                        }
+
+                        System.out.println("Обработано число: " + p + " за " + elapsedTime + " мс (прошло " + millisSinceStart + " мс)");
                     });
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,6 +42,7 @@ public class SingleThreadMersenne {
         findMersenneNumbersAndLog(max, logFilePath);
         long endTime = System.nanoTime();
 
-        System.out.println("Общее время выполнения (сек): " + (endTime - startTime) / 1_000_000_000);
+        long totalTime = TimeUnit.NANOSECONDS.toMillis(endTime - startTime); // Общее время выполнения в миллисекундах
+        System.out.println("Общее время выполнения программы: " + totalTime + " мс");
     }
 }
