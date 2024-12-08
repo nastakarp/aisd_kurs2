@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 public class SingleThreadMersenne {
 
     public static void findMersenneNumbersAndLog(int max, String logFilePath) {
-        long programStartTime = System.nanoTime(); // Старт времени программы
+        long programStartTime = System.nanoTime();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath))) {
             IntStream.iterate(3, p -> p < max, p -> p + 2)
                     .filter(CheckUtils::isPrime)
@@ -18,8 +18,8 @@ public class SingleThreadMersenne {
                         boolean isMersenne = CheckUtils.lucasLehmerTest(p);
                         long endTime = System.nanoTime();
 
-                        long elapsedTime = TimeUnit.NANOSECONDS.toMillis(endTime - startTime); // Время вычисления текущего числа
-                        long millisSinceStart = TimeUnit.NANOSECONDS.toMillis(endTime - programStartTime); // Прошедшее время с начала программы в миллисекундах
+                        long elapsedTime = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+                        long millisSinceStart = TimeUnit.NANOSECONDS.toMillis(endTime - programStartTime);
 
                         try {
                             writer.write(p + " " + millisSinceStart + "\n");
@@ -35,14 +35,14 @@ public class SingleThreadMersenne {
     }
 
     public static void main(String[] args) {
-        int max = 5000; // Верхняя граница
+        int max = 10000;
         String logFilePath = "single_thread_log.txt";
 
         long startTime = System.nanoTime();
         findMersenneNumbersAndLog(max, logFilePath);
         long endTime = System.nanoTime();
 
-        long totalTime = TimeUnit.NANOSECONDS.toMillis(endTime - startTime); // Общее время выполнения в миллисекундах
+        long totalTime = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
         System.out.println("Общее время выполнения программы: " + totalTime + " мс");
     }
 }
